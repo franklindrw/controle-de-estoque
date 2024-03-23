@@ -1,10 +1,10 @@
 <div class="grid">
-  <div class="col-12">
+  <div class="w-full flex flex-column align-content-center justify-content-center">
     <div class="flex justify-content-center align-content-center text-align-center">
       <!-- Login -->
       <form [formGroup]="loginForm" (ngSubmit)="onSubmitLoginForm()">
         <p-card
-          styleClass="mt-10"
+          styleClass="mt-10 w-24rem"
           header="Login"
           subheader="Faça login com sua conta existente!"
           *ngIf="loginCard"
@@ -33,7 +33,7 @@
       <!-- register -->
       <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignupForm()">
         <p-card
-          styleClass="mt-10"
+          styleClass="mt-10 w-24rem"
           header="Criar Conta"
           subheader="Crie já sua conta!"
           *ngIf="!loginCard"
