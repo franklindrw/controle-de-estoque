@@ -1,5 +1,5 @@
 import { CookieService } from 'ngx-cookie-service';
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { FormBuilder, Validators } from '@angular/forms';
 import { SignupUserReq } from 'src/app/models/interfaces/user/SignupUserReq';
 import { AuthReq } from 'src/app/models/interfaces/user/auth/AuthReq';
@@ -7,13 +7,15 @@ import { UserService } from 'src/app/services/user/user.service';
 import { environment } from 'src/environments/environment';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent {
+export class HomeComponent implements OnDestroy {
+  private destroy$ = new Subject<void>();
   loginCard = true;
 
   loginForm = this.formBuilder.group({
@@ -38,6 +40,9 @@ export class HomeComponent {
   onSubmitLoginForm(): void {
     if (this.loginForm.value && this.loginForm.valid) {
       this.userService.authUser(this.loginForm.value as AuthReq)
+        .pipe(
+          takeUntil(this.destroy$)
+        )
         .subscribe({
           next: (resp) => {
             if (resp) {
@@ -94,5 +99,10 @@ export class HomeComponent {
           }
         })
     }
+  }
+
+  ngOnDestroy(): void {
+    this.destroy$.next();
+    this.destroy$.complete();
   }
 }
